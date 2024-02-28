@@ -96,32 +96,34 @@ fun swipeableContainer(userModel: UserModel, viewModel: UserViewModel) {
         icon = {
             defaultIcon(
                 icon = Icons.Default.Favorite,
-                title = "Make Unfavorite",
+                title = "Make favorite",
                 onclick = {
-                    user.isFavorite = true
-                    viewModel.updateUserToLocal(user)
                 }
             )
         },
-        background = Color.DarkGray,
-        onSwipe = {},
+        background = Color.Green,
+        onSwipe = {
+            user.isFavorite = true
+            viewModel.updateUserToLocal(user)
+                  },
         weight = 1.0,
         isUndo = false
     )
 
     val favoriteBoarder = SwipeAction(
-        onSwipe = {},
+        onSwipe = {
+            user.isFavorite = false
+            viewModel.updateUserToLocal(user)
+                  },
         icon = {
             defaultIcon(
                 icon = Icons.Default.FavoriteBorder,
-                title = "Make Favorite",
+                title = "Remove as favorite",
                 onclick = {
-                    user.isFavorite = false
-                    viewModel.updateUserToLocal(user)
                 }
             )
         },
-        background = Color.DarkGray,
+        background = Color.Red,
         weight = 1.0,
         isUndo = false
     )
@@ -129,7 +131,7 @@ fun swipeableContainer(userModel: UserModel, viewModel: UserViewModel) {
     SwipeableActionsBox(
         startActions = listOf(favorite, favoriteBoarder),
         endActions = listOf(favorite, favoriteBoarder),
-        dragStateDelay = 3000,
+        dragStateDelay = 1,
         userModel = user
     ) {
         UserListItem(user)
@@ -150,8 +152,7 @@ fun defaultIcon(
             icon,
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth(0.5F)
-                .fillMaxHeight()
+                .fillMaxSize(0.5F)
                 .clickable {
                     onclick()
                 }

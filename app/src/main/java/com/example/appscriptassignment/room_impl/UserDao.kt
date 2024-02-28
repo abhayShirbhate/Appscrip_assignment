@@ -9,8 +9,8 @@ import androidx.room.Update
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM users")
-    fun getAllUsers(): List<UserModel>
+    @Query("SELECT * FROM users LIMIT :pageSize OFFSET :offset")
+    fun getAllUsers(pageSize: Int, offset: Int): List<UserModel>
 
     @Query("SELECT * FROM users WHERE isFavorite = 1")
     fun getAllFavoriteUsers(): List<UserModel>

@@ -1,5 +1,6 @@
 package com.example.appscriptassignment.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -10,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.example.appscriptassignment.viewmodel.UserViewModel
 import com.example.appscriptassignment.viewmodel.FavoriteViewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DashboardScreen(userViewModel: UserViewModel,favoriteViewModel: FavoriteViewModel) {
     var selectedTab by remember { mutableStateOf(0) }
@@ -19,7 +21,7 @@ fun DashboardScreen(userViewModel: UserViewModel,favoriteViewModel: FavoriteView
 
             BottomNavigation(
                 backgroundColor = Color.White,
-                elevation = 8.dp
+                elevation = 8.dp,
             ) {
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Person, contentDescription = "Users") },
@@ -50,8 +52,7 @@ fun DashboardScreen(userViewModel: UserViewModel,favoriteViewModel: FavoriteView
                 )
             }
         }
-    ) { _p ->
-        println(_p)
+    ) {
         when (selectedTab) {
             0 -> UserScreen(userViewModel)
             1 -> FavoritePage(favoriteViewModel)

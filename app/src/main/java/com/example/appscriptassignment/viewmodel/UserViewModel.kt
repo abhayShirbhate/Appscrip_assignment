@@ -1,6 +1,7 @@
 package com.example.appscriptassignment.viewmodel
 
-import androidx.lifecycle.LiveData
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.appscriptassignment.Response.ApiResult
@@ -17,11 +18,25 @@ class UserViewModel @Inject constructor(private val repository: UserRepository):
     private val _errorLiveDate = MutableLiveData<String>()
     val errorLiveData get() = _errorLiveDate
 
-    private val _listItems = mutableListOf<UserModel>()
-    val listItems: List<UserModel> get() = _listItems.toList()
+    private val _listItems = mutableStateListOf<UserModel>()
+    val listItems: List<UserModel> get() = _listItems
+
+
+    private var _progressBarVisibility =  mutableStateOf(false)
+    val progressBarVisibility get() = _progressBarVisibility
+
+
+    private var pageNo = 1
+    private val pageSize = 10
+
+    init {
+        fetchUsers()
+    }
 
     fun fetchUsers(){
-        repository.fetchUsers(1,10,this)
+        if (pageNo==-1) return
+        _progressBarVisibility.value = true
+        repository.fetchUsers(pageNo,pageSize,this)
     }
 
     fun updateUserToLocal(userModel: UserModel){
@@ -32,16 +47,20 @@ class UserViewModel @Inject constructor(private val repository: UserRepository):
     override fun fetchUserApiListenerCallBack(result: ApiResult<List<User>>) {
         when (result) {
             is ApiResult.Success -> {
+                if (result.data.size < 10) pageNo = -1
                 repository.saveUserListToLocalDB(result.data){
-                    repository.getAllUsersFromLocalDB(this)
+                    repository.getAllUsersFromLocalDB(pageSize,pageNo,this)
+                    pageNo++
                 }
             }
 
             is ApiResult.NoInternetConnection -> {
                 _errorLiveDate.postValue(result.msg)
+                _progressBarVisibility.value = false
             }
 
             is ApiResult.Error -> {
+                _progressBarVisibility.value = false
                 _errorLiveDate.postValue(result.msg)
             }
         }
@@ -49,6 +68,7 @@ class UserViewModel @Inject constructor(private val repository: UserRepository):
 
     override fun getAllUsersFromLocalDB(list: List<UserModel>) {
         _listItems.addAll(list)
+        _progressBarVisibility.value = false
     }
 
 

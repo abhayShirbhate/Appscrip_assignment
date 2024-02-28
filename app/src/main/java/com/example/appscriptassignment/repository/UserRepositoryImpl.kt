@@ -48,9 +48,9 @@ class UserRepositoryImpl @Inject constructor(
         })
     }
 
-    override fun getAllUsersFromLocalDB(fetchUserApiListener: FetchUserApiListener) {
+    override fun getAllUsersFromLocalDB(pageSize: Int, pageNo: Int,fetchUserApiListener: FetchUserApiListener) {
         CoroutineScope(Dispatchers.IO).launch {
-            val list = userDao.getAllUsers()
+            val list = userDao.getAllUsers(pageSize,pageSize*pageNo)
             withContext(Dispatchers.Main) {
                 fetchUserApiListener.getAllUsersFromLocalDB(list)
             }

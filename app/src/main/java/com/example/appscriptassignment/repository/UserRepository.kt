@@ -9,6 +9,6 @@ interface UserRepository {
     fun fetchUsers(page: Int, pageSize: Int, fetchUserApiListener: FetchUserApiListener)
     fun saveUserListToLocalDB(userList: List<User>,callBack: ()->Unit)
     fun updateUserToLocalDB(userModel: UserModel)
-    fun getAllUsersFromLocalDB(fetchUserApiListener: FetchUserApiListener)
+    fun getAllUsersFromLocalDB(pageSize: Int, pageNo:Int,fetchUserApiListener: FetchUserApiListener)
     fun getAllFavoriteUsers(getFavoriteUserLocalDBListener: GetFavoriteUserLocalDBListener)
 }
